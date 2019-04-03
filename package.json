@@ -4,9 +4,8 @@
   "description": "Generate your school planning with courses dependencies and vacations",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/index.js",
-    "start-dev": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile\"",
-    "compile": "tsc",
+    "gulp": "gulp",
+    "start": "npm run gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,8 +24,15 @@
   "homepage": "https://github.com/ben-barbier/planning-generator#readme",
   "devDependencies": {
     "@types/node": "^11.13.0",
-    "nodemon": "^1.18.10",
+    "browserify": "^16.2.3",
+    "fancy-log": "^1.3.3",
+    "gulp": "^4.0.0",
+    "gulp-cli": "^2.1.0",
+    "gulp-typescript": "^5.0.1",
+    "tsify": "^4.0.1",
     "tslint": "^5.15.0",
-    "typescript": "^3.4.1"
+    "typescript": "^3.4.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.1"
   }
 }

@@ -1,16 +1,16 @@
 {
+    "include": [
+        "./src/*.ts"
+    ],
     "compilerOptions": {
+        "noImplicitAny": true,
         "outDir": "./dist",
         "allowJs": false,
-        "target": "es6",
+        "target": "es5",
         "sourceMap": true,
         "module": "commonjs",
         "moduleResolution": "node"
     },
-    "include": [
-        "./data/**/*",
-        "./index.ts"
-    ],
     "exclude": [
         "node_modules"
     ]
