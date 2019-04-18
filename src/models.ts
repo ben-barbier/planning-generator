@@ -3,6 +3,8 @@ export interface Course {
     description: string;
     teachersIds: string[];
     coursesPreconditionsIds: string[];
+    date?: string;
+    matter?: string;
 }
 
 export interface Teacher {
