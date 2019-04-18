@@ -6,7 +6,7 @@
   "scripts": {
     "gulp": "gulp",
     "start": "npm run gulp",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/ben-barbier/planning-generator#readme",
   "devDependencies": {
+    "@types/jasmine": "^3.3.12",
     "@types/node": "^11.13.0",
     "@types/papaparse": "^4.5.9",
     "browserify": "^16.2.3",
@@ -30,6 +31,8 @@
     "gulp": "^4.0.0",
     "gulp-cli": "^2.1.0",
     "gulp-typescript": "^5.0.1",
+    "jasmine": "^3.4.0",
+    "ts-node": "^8.1.0",
     "tsify": "^4.0.1",
     "tslint": "^5.15.0",
     "typescript": "^3.4.1",
