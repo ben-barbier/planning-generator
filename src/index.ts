@@ -1,45 +1,73 @@
 import {Course} from './models';
-import {courses, teachers, timeSlots} from './inputs';
-import {displayMessage, displayPlanning, isIncoherent, shuffleCourses, swapCourses} from './utils';
+import {
+    addEmptyCoursesAtTheEnd,
+    displayMessage,
+    displayPlanning,
+    getRepartitionScore,
+    isIncoherent,
+    shuffleCourses,
+    swapCourses
+} from './utils';
+import {getCourses, readFile} from './courses';
+import {timeSlots} from './timeSlots';
+import {teachers} from './teachers';
+
+const maxIterations = 1000;
 
 (function () {
 
-    // Check that there are enough time slots
-    if (courses.length > timeSlots.length) {
-        displayMessage('There are more courses than time slots 😤.');
-        return;
-    }
+    getCourses(readFile('courses.csv')).then(courses => {
 
-    let results: { planning: Course[], score: number }[] = [];
+        // Check that there are enough time slots
+        if (courses.length > timeSlots.length) {
+            displayMessage('There are more courses than time slots 😤.');
+            return;
+        } else {
+            // Add empty courses on list
+            const numberOfEmptyCoursesToAdd = timeSlots.length - courses.length;
+            courses = addEmptyCoursesAtTheEnd(courses, numberOfEmptyCoursesToAdd);
+        }
 
-    for (let i = 0; i < 1000; i++) {
-        let planning = shuffleCourses(courses);
-        let courseToValidateIdx = 0;
-        while (courseToValidateIdx < planning.length) {
-            if (isIncoherent(planning, courseToValidateIdx, teachers, timeSlots)) {
-                let alternativeIdx = courseToValidateIdx + 1;
-                let alternativePlanning = swapCourses(planning, courseToValidateIdx, alternativeIdx);
-                while (isIncoherent(alternativePlanning, courseToValidateIdx, teachers, timeSlots)) {
-                    alternativeIdx++;
+        let results: { planning: Course[], score: number }[] = [];
+
+        for (let i = 0; i < maxIterations; i++) {
+            try {
+                const planningWithScore = generatePlanning(courses);
+                results.push(planningWithScore);
+            } catch (error) {
+            }
+        }
+
+        const result = results.sort((a, b) => b.score - a.score)[0];
+
+        if (result.score === 0) {
+            displayMessage('No perfect planning detected 😤.');
+        }
+
+        displayPlanning(timeSlots, result.planning);
+        displayMessage(`Repartition score: ${result.score} / 100`);
+
+    });
+
+})();
+
+function generatePlanning(courses: Course[]): { planning: Course[], score: number } {
+    let planning = shuffleCourses(courses);
+    let courseToValidateIdx = 0;
+    while (courseToValidateIdx < planning.length) {
+        if (isIncoherent(planning, courseToValidateIdx, teachers, timeSlots)) {
+            let alternativeIdx = courseToValidateIdx + 1;
+            let alternativePlanning = swapCourses(planning, courseToValidateIdx, alternativeIdx);
+            while (isIncoherent(alternativePlanning, courseToValidateIdx, teachers, timeSlots)) {
+                alternativeIdx++;
                 if (alternativeIdx > timeSlots.length) {
                     throw new Error('Unable to compute planning by this way 😤');
                 }
-                    alternativePlanning = swapCourses(planning, courseToValidateIdx, alternativeIdx);
-                }
-                planning = alternativePlanning;
+                alternativePlanning = swapCourses(planning, courseToValidateIdx, alternativeIdx);
             }
-            courseToValidateIdx++;
+            planning = alternativePlanning;
         }
-        const score = timeSlots.length / planning.length;
-        results = results.concat({planning, score});
+        courseToValidateIdx++;
     }
-
-    const result = results.sort((a, b) => b.score - a.score)[0];
-
-    if (result.score !== 1) {
-        displayMessage('No perfect planning detected 😤.');
-    }
-
-    displayPlanning(timeSlots, result.planning);
-
-})();
+    return {planning, score: getRepartitionScore(planning, timeSlots)};
+}

@@ -1,10 +1,16 @@
 import {Course, Teacher} from './models';
-import {timeSlots} from './inputs';
+
+export function addEmptyCoursesAtTheEnd(courses: Course[], numberOfEmptyCoursesToAdd: number): Course[] {
+    const emptyCourses = 'x'.repeat(numberOfEmptyCoursesToAdd).split('').map(() => null);
+    return courses.concat(emptyCourses);
+}
 
 export function shuffleCourses(courses: Course[]): Course[] {
-    let planning = [...courses].sort(() => Math.random() - 0.5);
-    planning.length = timeSlots.length;
-    return planning;
+    const numberOfEmptyTimeslotsAtTheEnd = courses.reduceRight((acc, course) => {
+        return (course || acc.stop) ? {count: acc.count, stop: true} : {count: acc.count + 1, stop: false};
+    }, {count: 0, stop: false}).count;
+    const planning = courses.slice(0, courses.length - numberOfEmptyTimeslotsAtTheEnd).sort(() => Math.random() - 0.5);
+    return addEmptyCoursesAtTheEnd(planning, numberOfEmptyTimeslotsAtTheEnd);
 }
 
 export function displayPlanning(timeSlots: string[], planning: Course[]): void {
@@ -75,4 +81,21 @@ export function swapCourses(planning: Course[], incoherenceIdx: number, alternat
     return results;
 }
 
-
+export function getRepartitionScore(planning: Course[], timeSlots: string[]): number {
+    if (timeSlots.length < planning.length) {
+        return 0;
+    }
+    const points = planning.reduce((acc, course, idx, arr) => {
+        const previousCourse = arr[idx - 1];
+        if (!previousCourse || !course) {
+            return acc + 1;
+        } else if (course && course.date) {
+            return acc + 1;
+        } else if (course.matter !== previousCourse.matter) {
+            return acc + 1;
+        } else {
+            return acc;
+        }
+    }, 0);
+    return points / timeSlots.length * 100;
+}
