@@ -13,6 +13,13 @@ export function shuffleCourses(courses: Course[]): Course[] {
     return addEmptyCoursesAtTheEnd(planning, numberOfEmptyTimeslotsAtTheEnd);
 }
 
+export function shuffleSubPlanning(planning: Course[], validationIdx: number): Course[] {
+    return [
+        ...planning.slice(0, validationIdx),
+        ...shuffleCourses(planning.slice(validationIdx, planning.length))
+    ];
+}
+
 export function displayPlanning(timeSlots: string[], planning: Course[]): void {
     let planningToDisplay = timeSlots.map((timeSlot, idx) => {
         if (planning[idx]) {

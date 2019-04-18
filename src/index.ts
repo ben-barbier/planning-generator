@@ -6,6 +6,7 @@ import {
     getRepartitionScore,
     isIncoherent,
     shuffleCourses,
+    shuffleSubPlanning,
     swapCourses
 } from './utils';
 import {getCourses, readFile} from './courses';
@@ -56,6 +57,7 @@ function generatePlanning(courses: Course[]): { planning: Course[], score: numbe
     let courseToValidateIdx = 0;
     while (courseToValidateIdx < planning.length) {
         if (isIncoherent(planning, courseToValidateIdx, teachers, timeSlots)) {
+            planning = shuffleSubPlanning(planning, courseToValidateIdx);
             let alternativeIdx = courseToValidateIdx + 1;
             let alternativePlanning = swapCourses(planning, courseToValidateIdx, alternativeIdx);
             while (isIncoherent(alternativePlanning, courseToValidateIdx, teachers, timeSlots)) {
