@@ -21,6 +21,9 @@ import {displayMessage, displayPlanning, isIncoherent, shuffleCourses, swapCours
                 let alternativePlanning = swapCourses(planning, courseToValidateIdx, alternativeIdx);
                 while (isIncoherent(alternativePlanning, courseToValidateIdx, teachers, timeSlots)) {
                     alternativeIdx++;
+                if (alternativeIdx > timeSlots.length) {
+                    throw new Error('Unable to compute planning by this way 😤');
+                }
                     alternativePlanning = swapCourses(planning, courseToValidateIdx, alternativeIdx);
                 }
                 planning = alternativePlanning;
