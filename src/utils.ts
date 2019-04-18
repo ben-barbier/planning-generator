@@ -70,9 +70,8 @@ export function isIncoherent(planning: Course[], idx: number, allTeachers: Teach
 
 export function swapCourses(planning: Course[], incoherenceIdx: number, alternativeIdx: number): Course[] {
     const results = planning.slice();
-    const firstItem = planning[incoherenceIdx];
     results[incoherenceIdx] = planning[alternativeIdx];
-    results[alternativeIdx] = firstItem;
+    results[alternativeIdx] = planning[incoherenceIdx];
     return results;
 }
 
