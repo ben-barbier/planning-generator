@@ -3,6 +3,7 @@ import {
     addEmptyCoursesAtTheEnd,
     displayMessage,
     displayPlanning,
+    displayProgression,
     getRepartitionScore,
     isIncoherent,
     shuffleCourses,
@@ -13,7 +14,7 @@ import {getCourses, readFile} from './courses';
 import {timeSlots} from './timeSlots';
 import {teachers} from './teachers';
 
-const maxIterations = 1000;
+const maxIterations = 10000;
 
 (function () {
 
@@ -32,21 +33,27 @@ const maxIterations = 1000;
         let results: { planning: Course[], score: number }[] = [];
 
         for (let i = 0; i < maxIterations; i++) {
-            try {
-                const planningWithScore = generatePlanning(courses);
-                results.push(planningWithScore);
-            } catch (error) {
+            setTimeout(() => {
+                try {
+                    const planningWithScore = generatePlanning(courses);
+                    results.push(planningWithScore);
+                } catch (error) {
+                } finally {
+                    displayProgression(results.length);
+                }
+            }, 0);
+        }
+
+        setTimeout(() => {
+            const result = results.sort((a, b) => b.score - a.score)[0];
+
+            if (result.score === 0) {
+                displayMessage('No perfect planning detected 😤.');
             }
-        }
 
-        const result = results.sort((a, b) => b.score - a.score)[0];
-
-        if (result.score === 0) {
-            displayMessage('No perfect planning detected 😤.');
-        }
-
-        displayPlanning(timeSlots, result.planning);
-        displayMessage(`Repartition score: ${result.score} / 100`);
+            displayPlanning(timeSlots, result.planning);
+            displayMessage(`Repartition score: ${result.score} / 100`);
+        }, 0);
 
     });
 

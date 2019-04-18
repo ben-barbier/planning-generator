@@ -36,6 +36,11 @@ export function displayMessage(message: string): void {
     document.getElementById('message').innerHTML = message;
 }
 
+export function displayProgression(count: number): void {
+    console.log(`Potential planning generated : ${count}`);
+    document.getElementById('progression').innerHTML = `Potential planning generated : ${count}`;
+}
+
 const getTeachersByIds = (ids: string[], teachers: Teacher[]): Teacher[] => {
     return ids.map((teacherId: string): Teacher =>
         teachers.find((teacher: Teacher): boolean =>
@@ -78,7 +83,7 @@ export function isIncoherent(planning: Course[], idx: number, allTeachers: Teach
     return (courseToValidate && !preconditionsValidated(planning.slice(0, idx), courseToValidate)) ||
         (courseToValidate && courseTeachersOnVacation(courseToValidate, timeSlotToValidate, allTeachers)) ||
         (anotherCourseScheduledOnThatDate(courseToValidate, timeSlotToValidate, planning) ||
-        (courseToValidate && courseScheduledToAnotherDate(courseToValidate, timeSlotToValidate)));
+            (courseToValidate && courseScheduledToAnotherDate(courseToValidate, timeSlotToValidate)));
 }
 
 export function swapCourses(planning: Course[], incoherenceIdx: number, alternativeIdx: number): Course[] {
