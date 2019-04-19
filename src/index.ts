@@ -41,14 +41,14 @@ const maxIterations = 10000;
                 } finally {
                     displayProgression(results.length);
                 }
-            }, 0);
+            });
         }
 
         setTimeout(() => {
             const result = results.sort((a, b) => b.score - a.score)[0];
             displayPlanning(timeSlots, result.planning);
             displayMessage(`Repartition score: ${result.score} / 100`);
-        }, 0);
+        });
 
     });
 
