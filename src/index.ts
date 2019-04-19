@@ -4,7 +4,6 @@ import {
     displayMessage,
     displayPlanning,
     displayProgression,
-    getRepartitionScore,
     isIncoherent,
     shuffleCourses,
     shuffleSubPlanning,
@@ -13,6 +12,7 @@ import {
 import {getCourses, readFile} from './courses';
 import {timeSlots} from './timeSlots';
 import {teachers} from './teachers';
+import {getScore} from './score';
 
 const maxIterations = 10000;
 
@@ -35,7 +35,7 @@ const maxIterations = 10000;
         for (let i = 0; i < maxIterations; i++) {
             setTimeout(() => {
                 try {
-                    const planningWithScore = generatePlanning(courses);
+                    const planningWithScore = generatePlanningWithScore(courses);
                     results.push(planningWithScore);
                 } catch (error) {
                 } finally {
@@ -59,7 +59,7 @@ const maxIterations = 10000;
 
 })();
 
-function generatePlanning(courses: Course[]): { planning: Course[], score: number } {
+function generatePlanningWithScore(courses: Course[]): { planning: Course[], score: number } {
     let planning = shuffleCourses(courses);
     let courseToValidateIdx = 0;
     while (courseToValidateIdx < planning.length) {
@@ -78,5 +78,5 @@ function generatePlanning(courses: Course[]): { planning: Course[], score: numbe
         }
         courseToValidateIdx++;
     }
-    return {planning, score: getRepartitionScore(planning, timeSlots)};
+    return {planning, score: getScore(planning, timeSlots)};
 }

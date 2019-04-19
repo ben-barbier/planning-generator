@@ -92,22 +92,3 @@ export function swapCourses(planning: Course[], incoherenceIdx: number, alternat
     results[alternativeIdx] = planning[incoherenceIdx];
     return results;
 }
-
-export function getRepartitionScore(planning: Course[], timeSlots: string[]): number {
-    if (timeSlots.length < planning.length) {
-        return 0;
-    }
-    const points = planning.reduce((acc, course, idx, arr) => {
-        const previousCourse = arr[idx - 1];
-        if (!previousCourse || !course) {
-            return acc + 1;
-        } else if (course && course.date) {
-            return acc + 1;
-        } else if (course.matter !== previousCourse.matter) {
-            return acc + 1;
-        } else {
-            return acc;
-        }
-    }, 0);
-    return points / timeSlots.length * 100;
-}
