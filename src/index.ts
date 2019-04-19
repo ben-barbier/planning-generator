@@ -46,11 +46,6 @@ const maxIterations = 10000;
 
         setTimeout(() => {
             const result = results.sort((a, b) => b.score - a.score)[0];
-
-            if (result.score === 0) {
-                displayMessage('No perfect planning detected 😤.');
-            }
-
             displayPlanning(timeSlots, result.planning);
             displayMessage(`Repartition score: ${result.score} / 100`);
         }, 0);
